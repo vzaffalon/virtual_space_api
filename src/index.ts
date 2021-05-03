@@ -82,6 +82,13 @@ const createMongooseConection = async () => {
         });  
     })
 
+    app.get('/users', (req, res) => {
+        const User = mongoose.model('User');
+        User.find({},(err, users)=> {
+          res.send(users);
+        })
+    })
+
     app.post('/users', (req, res) => {
         const User = mongoose.model('User');
         var new_user = new User(req.body);  
@@ -95,11 +102,14 @@ const createMongooseConection = async () => {
 
     app.patch('/users/:id', (req, res) => {
         const User = mongoose.model('User');
-        User.findById(req.params.id, (err, user) => {
-            user = req.body;  
-            user.save((err) =>{
+        User.findById(req.params.id, (err: any, user: any) => {
+            user.name = req.body.name;  
+            user.position = req.body.position;
+            user.room_id = req.body.room_id;
+            user.save((err: any) =>{
                 if(err){
                   res.sendStatus(500);
+                  res.send(err)
                 }
                 res.send(user);
                 io.emit('users', user);
@@ -129,7 +139,7 @@ const createMongooseConection = async () => {
             res.sendStatus(500);
           }
           io.emit('message', req.body);
-          res.sendStatus(200);
+          res.send(message)
         })
     })
 }
