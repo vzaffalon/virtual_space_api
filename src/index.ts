@@ -2,7 +2,6 @@ import express from "express"
 import mongoose from "mongoose"
 import cors from "cors";
 import helmet from "helmet";
-import * as socketio from "socket.io";
 
 var app = express();
 app.set("port", process.env.PORT || 5000);
@@ -10,10 +9,13 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 let http = require("http").Server(app);
-let io = require("socket.io")(http);
+let io = require("socket.io")(http, {
+    cors: {
+      origin: "http://localhost:3001",
+      methods: ["GET", "POST"]
+    }
+  });
 
-// whenever a user connects on port 5000 via
-// a websocket, log that a user has connected
 io.on("connection", function (socket: any) {
     console.log("a user connected");
     socket.on("message", function(message: any) {
@@ -21,10 +23,8 @@ io.on("connection", function (socket: any) {
     });
 });
 
-
 const server = http.listen(5000, function () {
     console.log("listening on *:5000");
-    
 });
 
 const createMongooseConection = async () => {
@@ -44,8 +44,6 @@ const createMongooseConection = async () => {
 
     Room.add({
         name: String,
-        users: [User],
-        messages: [Message]
     });
 
     User.add({
@@ -104,23 +102,26 @@ const createMongooseConection = async () => {
         const User = mongoose.model('User');
         User.findById(req.params.id, (err: any, user: any) => {
             user.name = req.body.name;  
-            user.position = req.body.position;
+            console.log("position value")
+            console.log(req.body.position)
+            console.log("position value after")
+            user.position = parseInt(req.body.position);
             user.room_id = req.body.room_id;
+            console.log("que user recebeu")
+            console.log(user)
             user.save((err: any) =>{
+                console.log(err)
                 if(err){
                   res.sendStatus(500);
-                  res.send(err)
                 }
+                console.log("entrou aqui")
                 res.send(user);
-                io.emit('users', user);
+                console.log("quebrou aqui?")
+                User.find({},(err: any, users: any) => {
+                    console.log("volta tudo")
+                    io.emit('users', users);
+                })
             })
-        })
-    })
-
-    app.patch('/rooms/:id/users', (req, res) => {
-        const User = mongoose.model('User');
-        User.find({ room_id: req.params.id} , (err, users) => {
-            res.send(users);
         })
     })
     
@@ -138,8 +139,11 @@ const createMongooseConection = async () => {
           if(err){
             res.sendStatus(500);
           }
-          io.emit('message', req.body);
+          console.log("mensagem criada")
           res.send(message)
+          Message.find({ room_id: req.body.room_id },(err, messages)=> {
+            io.emit('messages', messages);
+          })
         })
     })
 }
