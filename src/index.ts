@@ -80,9 +80,9 @@ const createMongooseConection = async () => {
         });  
     })
 
-    app.get('/users', (req, res) => {
+    app.get('/rooms/:id/users', (req, res) => {
         const User = mongoose.model('User');
-        User.find({},(err, users)=> {
+        User.find({ room_id: req.params.id },(err, users)=> {
           res.send(users);
         })
     })
@@ -117,7 +117,7 @@ const createMongooseConection = async () => {
                 console.log("entrou aqui")
                 res.send(user);
                 console.log("quebrou aqui?")
-                User.find({},(err: any, users: any) => {
+                User.find({ room_id: req.body.room_id},(err: any, users: any) => {
                     console.log("volta tudo")
                     io.emit('users', users);
                 })
@@ -142,7 +142,7 @@ const createMongooseConection = async () => {
           console.log("mensagem criada")
           res.send(message)
           Message.find({ room_id: req.body.room_id },(err, messages)=> {
-            io.emit('messages', messages);
+            io.emit('messages', messages.reverse());
           })
         })
     })
