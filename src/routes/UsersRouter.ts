@@ -6,7 +6,7 @@ const controller = new UsersController();
 const baseUrl = "/users"
 
 router.get(baseUrl, (req, res) => controller.list(req, res));
-router.patch(baseUrl, (req, res) => controller.create(req, res));
+router.patch(baseUrl + "/:id", (req, res) => controller.update(req, res));
 router.post(baseUrl, (req, res) => controller.create(req, res));
 
 export default router;

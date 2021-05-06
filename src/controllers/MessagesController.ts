@@ -1,10 +1,10 @@
 import { Request, Response } from "express"
-import { io } from "../setup/UserSocketSetup";
+import { io } from "../index";
 import MessagesModel from "../models/MessagesModel";
 
 class MessagesController {
     list(req: Request, res: Response) {
-        MessagesModel.find({ room_id: req.params.room_id }, (err, messages) => {
+        MessagesModel.find({ room_id: req.query.room_id }, (err, messages) => {
             res.send(messages);
         })
     }

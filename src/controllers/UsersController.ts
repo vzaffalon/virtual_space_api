@@ -1,10 +1,10 @@
 import { Request, Response } from "express"
-import { io } from "../setup/UserSocketSetup";
+import { io } from "../index";
 import UsersModel from "../models/UsersModel";
 
 class UsersController {
     list(req: Request, res: Response) {
-        UsersModel.find({ room_id: req.params.id }, (err, users) => {
+        UsersModel.find({ room_id: req.query.room_id }, (err, users) => {
             res.send(users);
         })
     }
@@ -20,6 +20,7 @@ class UsersController {
     }
 
     update(req: Request, res: Response) {
+        console.log("entrou no update")
         UsersModel.findById(req.params.id, (err: any, user: any) => {
             user.name = req.body.name;
             console.log("position value")

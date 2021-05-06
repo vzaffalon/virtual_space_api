@@ -1,9 +1,9 @@
 import express from "express"
 import cors from "cors";
 import helmet from "helmet";
-import createMongooseConection from "./setup/MoongoseSetup";
-import { setUpSocketIo } from "./setup/UserSocketSetup";
-import { defaultPort } from "./config/ApiConsts";
+import createMongooseConection from "./db/MoongoseSetup";
+import { Socket } from "socket.io"
+import { originUri, defaultPort } from "./config/ApiConsts";
 import MessagesRouter from "./routes/MessagesRouter";
 import RoomsRouter from "./routes/RoomsRouter";
 import UsersRouter from "./routes/UsersRouter";
@@ -16,8 +16,18 @@ app.use(express.json());
 app.use(MessagesRouter);
 app.use(RoomsRouter);
 app.use(UsersRouter);
+let http = require("http").Server(app);
+let io: Socket = require("socket.io")(http, {
+    cors: {
+        origin: originUri,
+        methods: ["GET", "POST"]
+    }
+});
 
-setUpSocketIo(app)
+http.listen(defaultPort, function () {
+    console.log("listening on *:5000");
+});
+
 createMongooseConection()
 
-export default app
+export { app, io }
