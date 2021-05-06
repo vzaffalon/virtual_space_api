@@ -1,7 +1,9 @@
 import mongoose from "mongoose"
 
+const MongoDbAddress = "mongodb://localhost/virtualroomdb"
+
 const createMongooseConection = async () => {
-    await mongoose.connect('mongodb://localhost/virtualroomdb', {
+    await mongoose.connect(MongoDbAddress, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
