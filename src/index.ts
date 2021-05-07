@@ -7,6 +7,7 @@ import { originUri, defaultPort } from "./config/ApiConsts";
 import MessagesRouter from "./routes/MessagesRouter";
 import RoomsRouter from "./routes/RoomsRouter";
 import UsersRouter from "./routes/UsersRouter";
+import seedDatabase from "./seeds/RoomsSeeds";
 
 var app = express();
 app.set("port", process.env.PORT || defaultPort);
@@ -29,5 +30,6 @@ http.listen(defaultPort, function () {
 });
 
 createMongooseConection()
+seedDatabase()
 
 export { app, io }

@@ -18,7 +18,8 @@ class MessagesController {
             console.log("mensagem criada")
             res.send(message)
             MessagesModel.find({ room_id: req.body.room_id }, (err, messages) => {
-                io.emit('messages', messages.reverse());
+                io.emit('messages', messages);
+                io.emit('message', message);
             })
         })
     }
