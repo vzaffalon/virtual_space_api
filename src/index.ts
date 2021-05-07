@@ -25,7 +25,7 @@ let io: Socket = require("socket.io")(http, {
     }
 });
 
-http.listen(defaultPort, function () {
+http.listen(process.env.PORT || defaultPort, function () {
     console.log("listening on *:5000");
 });
 
