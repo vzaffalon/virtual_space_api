@@ -1,5 +1,4 @@
-const uri = "http://localhost:5000/";
 // const originUri = "http://localhost:3001";
-const originUri = "https://virtual-space-api.herokuapp.com/";
+const originUri = "https://adoring-ramanujan-6b9822.netlify.app";
 const defaultPort = 5000
-export { uri, originUri, defaultPort };
+export { originUri, defaultPort };
