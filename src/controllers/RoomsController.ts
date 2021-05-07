@@ -9,7 +9,7 @@ class RoomsController {
   }
 
   create(req: Request, res: Response) {
-    var new_room = new RoomsModel(req.body);
+    let new_room = new RoomsModel(req.body);
     new_room.save((err: any) => {
       if (err) {
         res.sendStatus(500);

@@ -9,7 +9,7 @@ import RoomsRouter from "./routes/RoomsRouter";
 import UsersRouter from "./routes/UsersRouter";
 import seedDatabase from "./seeds/RoomsSeeds";
 
-var app = express();
+let app = express();
 app.set("port", process.env.PORT || defaultPort);
 app.use(helmet());
 app.use(cors());
